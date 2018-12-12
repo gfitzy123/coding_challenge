@@ -4,9 +4,8 @@ const customer_config = require('./customer_config.json')
 const app = express()
 const port = 3000
 const json2xml = require('json2xml')
-const api_key = 'AIzaSyBSMeUHtkAqvto3YfszErGIRwJ4JJgCV3E'
 
-var server = app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 app.get('/', (req, response) => {
 
@@ -51,8 +50,11 @@ app.get('/', (req, response) => {
           } else if (storage.length < requested_locations && !body.next_page_token){
             //to handle the case where if for some reason, there are no more pages to fulfill the requested_locations
 
-            console.log("Couldn't get enough locations. Sent" + storage.length + "locations out of " + requested_locations + " back to client.")
-            response_output === 'xml' ? response.send(json2xml(storage)) :   response.send(storage)
+            console.log("Couldn't get enough locations. Sent " + storage.length + " locations out of " + requested_locations + " back to client.")
+
+            if (storage.length === 0){
+              response.status(500).send({ error: 'No locations found!' })
+            } else response_output === 'xml' ? response.send(json2xml(storage)) :   response.send(storage)
           }
           //Then send results back as JSON or XML,
       });
@@ -62,4 +64,4 @@ app.get('/', (req, response) => {
     fetch(google_api_places_request)
 })
 
-module.exports = { app: server, customer_config: customer_config }
+module.exports = { app: app, customer_config: customer_config }
