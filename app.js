@@ -23,14 +23,14 @@ app.get('/', (req, response) => {
   var storage = []
 
   const fetch = (url, token) => {
-      request(google_api_places_request, (err, res, body) => {
+      request(google_api_places_request, {json: true}, (err, res, body) => {
         if (err) {
           return console.log(err);
         }
+
       }).then(function(body, res){
            // check if there are proper amount of objects
            // in storage, call a recursive function if not
-
           if (storage.length < requested_locations && body.next_page_token){
 
             console.log("Adding locations..")
@@ -64,4 +64,4 @@ app.get('/', (req, response) => {
     fetch(google_api_places_request)
 })
 
-module.exports = { app: app, customer_config: customer_config }
+//module.exports = { app: server, customer_config: customer_config }
