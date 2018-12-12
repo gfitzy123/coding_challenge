@@ -10,6 +10,10 @@ Clone down the repo, and then npm install.
 
 You may need to install the latest version of Node.js and a utility tool to hit endpoints (such as Postman).
 
+You will also need existing Google Places API keys in order to successfully utilize the endpoint. You have to replace them in the customer_config.json file.
+
+You can acquire them here: https://developers.google.com/places/web-service/get-api-key
+
 
 ### Installing
 
