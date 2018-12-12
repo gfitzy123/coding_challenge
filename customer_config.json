@@ -1,0 +1,23 @@
+{
+  "Sunrise Bank" : {
+      "api_key": "AIzaSyBBly-4dXh3St0IgBJ1nXNLk9gv0xQ8OoI",
+      "type": "atm",
+      "language": "English",
+      "response_output": "XML",
+      "number_of_nearby_locations_to_request": 200
+    },
+  "Happy Credit Union" : {
+    "api_key": "AIzaSyBSMeUHtkAqvto3YfszErGIRwJ4JJgCV3E",
+    "type": "atm",
+    "language": "English",
+    "response_output": "JSON",
+    "number_of_nearby_locations_to_request": 20
+  },
+  "Paris FCU": {
+    "api_key": "AIzaSyAyJV0cP7zn5Q3Ihb4359Wp4LPlhMcVdXE",
+    "type": "atm",
+    "language": "English",
+    "response_output": "XML",
+    "number_of_nearby_locations_to_request": 5
+  }
+}
