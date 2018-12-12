@@ -5,7 +5,7 @@ const app = express()
 const port = 3000
 const json2xml = require('json2xml')
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+var server = app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 app.get('/', (req, response) => {
 
@@ -15,7 +15,7 @@ app.get('/', (req, response) => {
   let name = client_req.customer_name
   let api_key = customer_config[name]["api_key"]
   let type = customer_config[name]["type"].toLowerCase()
-  let language = customer_config[name]["language"].toLowerCase()
+  let language = customer_config[name]["language_code"].toLowerCase()
   let response_output = customer_config[name]["response_output"].toLowerCase()
   let requested_locations = parseInt(customer_config[name]["number_of_nearby_locations_to_request"])
   let google_api_places_request = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&rankby=distance&language=${language}&key=${api_key}`;
@@ -42,9 +42,9 @@ app.get('/', (req, response) => {
             //Just need to trim to the exact amount.
 
             console.log("Have enough locations.")
-            storage = storage.slice(0, requested_locations + 1)
+            storage = storage.slice(0, requested_locations)
 
-            console.log('Done - sent ' + storage.length + ' locations' + 'out of' + requested_locations + 'back to client.')
+            console.log('Done - sent ' + storage.length + ' locations out of ' + requested_locations + ' back to client.')
             response_output === 'xml' ? response.send(json2xml(storage)) :   response.send(storage)
 
           } else if (storage.length < requested_locations && !body.next_page_token){
@@ -64,4 +64,4 @@ app.get('/', (req, response) => {
     fetch(google_api_places_request)
 })
 
-//module.exports = { app: server, customer_config: customer_config }
+module.exports = { app: server, customer_config: customer_config }
