@@ -24,44 +24,42 @@ const randomPoint = randomLocation.randomCirclePoint(P, R)
 
 describe('GET /', function() {
 
-  it('responds with json', function(done) {
-    let random_bank = randomProperty(customer_config)
+  let random_bank = randomProperty(customer_config)
 
-    request(app)
-      .get('/')
-      .query({ customer_name: random_bank.customer_name, lat: randomPoint.latitude, long: randomPoint.longitude })
-      .expect('Content-Type', /json/)
-      .expect(200, done)
-  });
-
-  it('responds with xml', function(done) {
-    request(app)
-      .get('/?customer_name=Paris FCU&lat=30.267153&long=-97.7430608')
-      .expect('Content-Type', "text/html; charset=utf-8")
-      .expect(200, done)
-  });
-
-  it('responds with correct location count', function(done) {
+  it('responds with correct content-type', function(done) {
     request(app)
       .get('/')
       .query({ customer_name: random_bank.customer_name, lat: randomPoint.latitude, long: randomPoint.longitude })
       .expect(function(res) {
-         if (res.body.length !=== random_bank.number_of_nearby_locations_to_request) {
-           throw new Error("request is not returning correct requested locations amount");
-         }
-      }, done).catch(done)
-    });
-  //
+        let xml = "text/html; charset=utf-8"
+        let json = "application/json; charset=utf-8"
 
-  it('responds in correct lanaguage', function(done) {
-    request(app)
-      .get('/')
-      .query({ customer_name: random_bank.customer_name, lat: randomPoint.latitude, long: randomPoint.longitude })
-      .send({ 'customer_name': 'Paris FCU', 'lat': 30.267153, 'long': -97.7430608})
-      .expect('Content-Type', /xml/)
-      .expect(200, done);
+        var requested_content = res.header['content-type']
+        let bool
+
+        if (random_bank.response_output === 'XML') {
+            bool = requested_content === xml ? true : false
+        } else {
+            bool = requested_content === json ? true : false
+        }
+
+         if (!bool && !res.serverError) throw new Error("incorrect content type returned");
+
+      })
+      .end(done)
   });
 
 
+  it('responds with correct location count that is never more than what is requested', function(done) {
+    request(app)
+      .get('/')
+      .query({ customer_name: random_bank.customer_name, lat: randomPoint.latitude, long: randomPoint.longitude })
+      .expect(function(res) {
+         if (res.body.length > random_bank.number_of_nearby_locations_to_request) {
+           throw new Error("request is not returning correct requested locations amount");
+         }
+      })
+      .end(done)
+    });
 
 });
