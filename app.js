@@ -6,9 +6,9 @@ const port = 3000
 const json2xml = require('json2xml')
 const api_key = 'AIzaSyBSMeUHtkAqvto3YfszErGIRwJ4JJgCV3E'
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+var server = app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
-app.get('/', function (req, response) {
+app.get('/', (req, response) => {
 
   let client_req = req.query
   let lat = client_req.lat
@@ -24,7 +24,7 @@ app.get('/', function (req, response) {
   var storage = []
 
   const fetch = (url, token) => {
-      request(google_api_places_request, { json: true }, (err, res, body) => {
+      request(google_api_places_request, (err, res, body) => {
         if (err) {
           return console.log(err);
         }
@@ -34,31 +34,25 @@ app.get('/', function (req, response) {
 
           if (storage.length < requested_locations && body.next_page_token){
 
+            console.log("Adding locations..")
             Array.prototype.push.apply(storage, body.results)
             fetch(google_api_places_request, body.next_page_token)
 
-          } else if (storage.length > requested_locations) {
+          } else if (storage.length >= requested_locations) {
             //If storage is greater than requested locatins, we have enough locations now
             //Just need to trim to the exact amount.
 
+            console.log("Have enough locations.")
             storage = storage.slice(0, requested_locations + 1)
 
-            if (response_output === 'xml'){
-                console.log('Done - sent ' + storage.length + ' locations back to client.')
-                response.send(json2xml(storage))
-            } else {
-                console.log('Done - sent ' + storage.length + ' locations back to client.')
-                response.send(storage)
-            }
+            console.log('Done - sent ' + storage.length + ' locations' + 'out of' + requested_locations + 'back to client.')
+            response_output === 'xml' ? response.send(json2xml(storage)) :   response.send(storage)
+
           } else if (storage.length < requested_locations && !body.next_page_token){
             //to handle the case where if for some reason, there are no more pages to fulfill the requested_locations
-              if (response_output === 'xml'){
-                  console.log('Done - sent ' + storage.length + ' locations back to client.')
-                  response.send(json2xml(storage))
-              } else {
-                  console.log('Done - sent ' + storage.length + ' locations back to client.')
-                  response.send(storage)
-              }
+
+            console.log("Couldn't get enough locations. Sent" + storage.length + "locations out of " + requested_locations + " back to client.")
+            response_output === 'xml' ? response.send(json2xml(storage)) :   response.send(storage)
           }
           //Then send results back as JSON or XML,
       });
@@ -66,5 +60,6 @@ app.get('/', function (req, response) {
 
     console.log('Fetching results..')
     fetch(google_api_places_request)
-
 })
+
+module.exports = { app: server, customer_config: customer_config }
