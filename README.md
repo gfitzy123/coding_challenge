@@ -1,4 +1,4 @@
-# Malauzai Coding Challenge
+# Coding Challenge
 
 The objective of the coding challenge was to create an API endpoint through which a user could request a group of locations defined by existing customer information.
 
