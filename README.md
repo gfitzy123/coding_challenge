@@ -40,6 +40,19 @@ To run the application:
 node app.js
 ```
 
+## API endpoint
+
+To hit the endpoint, make a request to '/' with parameters as follows:
+
+```
+{ 
+  customer_name: 'Sunrise Bank',
+  lat: < a latitude coordinate > ,
+  long: < a longitude coordinate
+}
+```
+
+The endpoint will return an amount of locations as set in the customer configuration file.
 
 ## Contributing
 
