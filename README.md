@@ -47,8 +47,8 @@ To hit the endpoint, make a request to '/' with parameters as follows:
 ```
 { 
   customer_name: 'Sunrise Bank',
-  lat: < a latitude coordinate > ,
-  long: < a longitude coordinate
+  lat:  < a_latitude_coordinate > ,
+  long: < a_longitude_coordinate >
 }
 ```
 
